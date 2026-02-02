@@ -369,9 +369,17 @@ export async function createCanvasHostHandler(
           : ((await detectMime({ filePath: realPath })) ?? "application/octet-stream");
 
       res.setHeader("Cache-Control", "no-store");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      res.setHeader("X-Frame-Options", "SAMEORIGIN");
+      res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+      res.setHeader("X-XSS-Protection", "0"); // rely on CSP, not legacy filter
       if (mime === "text/html") {
         const html = data.toString("utf8");
         res.setHeader("Content-Type", "text/html; charset=utf-8");
+        res.setHeader(
+          "Content-Security-Policy",
+          "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' ws: wss:; frame-ancestors 'self'",
+        );
         res.end(liveReload ? injectCanvasLiveReload(html) : html);
         return true;
       }

@@ -1,4 +1,11 @@
 #!/bin/sh
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 [ -z "$ROOT" ] && exit 0
+
+# Format staged files
 node "$ROOT/scripts/format-staged.js"
+
+# Security scan staged files (blocks dangerous patterns)
+if [ -x "$ROOT/scripts/security-scan-staged.sh" ]; then
+  sh "$ROOT/scripts/security-scan-staged.sh" "$ROOT" || exit 1
+fi

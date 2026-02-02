@@ -3,10 +3,12 @@
   "plugins": [
     "unicorn",
     "typescript",
-    "oxc"
+    "oxc",
+    "security"
   ],
   "categories": {
-    "correctness": "error"
+    "correctness": "error",
+    "security": "warn"
   },
   "ignorePatterns": ["src/canvas-host/a2ui/a2ui.bundle.js"]
 }
